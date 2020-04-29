@@ -3,22 +3,39 @@
 
 import socket
 
-target_host = "google.com"
-target_port = 80
+# opting to combine server objects, leaving lines for reference
+#target_host = "127.0.0.1"
+#target_port = 6969
 
 # create socket object, AF_INET = IPv4, SOCK_STREAM = TCP
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# define server address
+server_address = ('127.0.0.1', 6969)
+print(f'Connecting to {server_address[0]} on port {server_address[1]}')
+
+# opting to combine server objects, leaving for reference
 # connect client
-client.connect((target_host,target_port))
+#client.connect((target_host,target_port))
 
-# message to send
-message = "GET / HTTP/1.1\r\nHost: google.com\r\n\r\n"
+client.connect(server_address)
 
-# send data
-client.send(message.encode('utf-8'))
+try:
 
-# receive data
-response = client.recv(4096)
+    # message to send
+    #message = "GET / HTTP/1.1\r\nHost: google.com\r\n\r\n"
+    message = b'Hello Mate'
 
-print(response)
+    # send data
+    #client.send(message.encode('utf-8'))
+    print(f'Sending: {message}')
+    client.sendall(message)
+
+    # receive data
+    response = client.recv(4096)
+
+    print(f'Received from Server: {response}')
+
+finally:
+    print('Closing Socket!')
+    client.close()
